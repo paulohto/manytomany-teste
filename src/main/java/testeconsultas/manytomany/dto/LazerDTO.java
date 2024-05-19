@@ -29,6 +29,7 @@ public class LazerDTO {
         this.tipo = lazer.getTipo();
     }
 
+
 //    public LazerDTO(Lazer lazer, Set<Residencial> residenciais) {
 //        this(lazer);
 //        residenciais.forEach(residencial -> this.residenciais.add(new ResidencialDTO(residencial)));

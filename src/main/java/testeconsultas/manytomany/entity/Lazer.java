@@ -17,7 +17,7 @@ public class Lazer {
     private Long id;
     private String tipo;
 
-    @ManyToMany(mappedBy = "lazeres")
+    @ManyToMany(mappedBy = "lazeres", fetch = FetchType.LAZY)
     private Set<Residencial> residenciais = new HashSet<>();
 
     public Lazer(){}
@@ -30,4 +30,5 @@ public class Lazer {
     public Set<Residencial> getResidenciais() {
         return residenciais;
     }
+    public void setResidenciais(Set<Residencial> residenciais) { this.residenciais = residenciais; }
 }

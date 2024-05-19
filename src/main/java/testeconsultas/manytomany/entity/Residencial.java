@@ -16,7 +16,7 @@ public class Residencial {
     private Long id;
     private String nome;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
     @JoinTable(
             name = "tb_residencial_lazer",
             joinColumns = @JoinColumn(name = "residencial_id"),
@@ -34,5 +34,7 @@ public class Residencial {
     public Set<Lazer> getLazeres() {
         return lazeres;
     }
+
+    public void setLazeres(Set<Lazer> lazerer) { this.lazeres = lazeres; }
 
 }

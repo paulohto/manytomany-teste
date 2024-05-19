@@ -16,8 +16,14 @@ public class ResidencialDTO {
     private Long id;
     private String nome;
     private List<LazerDTO> lazeres = new ArrayList<>();
-
+    //private List<LazerDTO> lazeres;
     public ResidencialDTO() {}
+
+    public ResidencialDTO(Long id, String nome, List<LazerDTO> lazeres) {
+        this.id = id;
+        this.nome = nome;
+        this.lazeres = lazeres;
+    }
 
     public ResidencialDTO(Long id, String nome) {
         this.id = id;
@@ -38,6 +44,10 @@ public class ResidencialDTO {
 
     public List<LazerDTO> getLazeres() {
         return lazeres;
+    }
+
+    public void setLazeres(List<LazerDTO> lazeres) {
+        this.lazeres = lazeres;
     }
 
 
