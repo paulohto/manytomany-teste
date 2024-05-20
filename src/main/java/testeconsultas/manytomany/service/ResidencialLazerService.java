@@ -23,23 +23,6 @@ public class ResidencialLazerService {
     @Autowired
     private ILazerRepository lazerRepository;
 
-    @Autowired
-    private ResidencialService residencialService;
-
-//    @Transactional(readOnly = true)
-//    public ResidencialDTO findResidencialWithLazerById(Long id) {
-//        Optional<Residencial> residencialOpt = residencialRepository.findById(id);
-//        if (!residencialOpt.isPresent()) {
-//            return null;
-//        }
-//
-//        Residencial residencial = residencialOpt.get();
-//        List<LazerDTO> lazerDTOs = residencial.getLazeres().stream()
-//                .map(lazer -> new LazerDTO(lazer.getId(), lazer.getTipo()))
-//                .collect(Collectors.toList());
-//
-//        return new ResidencialDTO(residencial.getId(), residencial.getNome(), lazerDTOs);
-//    }
 
     //TESTE FUNCIONANDO ESSE - OK
     @Transactional(readOnly = true)
@@ -51,6 +34,7 @@ public class ResidencialLazerService {
         }
 
         Residencial residencial = residencialOpt.get();
+
         // Busque os lazeres associados ao residencial
         List<LazerDTO> lazerDTOs = residencialRepository.findByResidencialId(id).stream()
                 .map(result -> new LazerDTO((Long) result[1], (String) result[2]))
@@ -60,12 +44,5 @@ public class ResidencialLazerService {
         return new ResidencialDTO(residencial.getId(), residencial.getNome(), lazerDTOs);
     }
 
-//    @Transactional(readOnly = true)
-//    public List<ResidencialLazerDTO> findLazerByResidencialId(Long id) {
-//        List<Object[]> results = residencialRepository.findByResidencialId(id);
-//        return results.stream()
-//                .map(result -> new ResidencialLazerDTO((Long) result[0], (Long) result[1]))
-//                .collect(Collectors.toList());
-//    }
 
 }

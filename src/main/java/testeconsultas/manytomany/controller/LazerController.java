@@ -31,4 +31,5 @@ public class LazerController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand((lazerDTO.getId())).toUri();
         return ResponseEntity.created(uri).body(lazerDTO);
     }
+
 }

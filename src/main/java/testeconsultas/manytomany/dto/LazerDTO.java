@@ -15,8 +15,6 @@ public class LazerDTO {
     private Long id;
     private String tipo;
 
-    //private List<ResidencialDTO> residenciais = new ArrayList<>();
-
     public LazerDTO(){}
 
     public LazerDTO(Long id, String tipo) {
@@ -28,15 +26,5 @@ public class LazerDTO {
         this.id = lazer.getId();
         this.tipo = lazer.getTipo();
     }
-
-
-//    public LazerDTO(Lazer lazer, Set<Residencial> residenciais) {
-//        this(lazer);
-//        residenciais.forEach(residencial -> this.residenciais.add(new ResidencialDTO(residencial)));
-//    }
-//
-//    public List<ResidencialDTO> getResidenciais() {
-//        return residenciais;
-//    }
 
 }

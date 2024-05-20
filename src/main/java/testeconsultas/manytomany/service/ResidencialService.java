@@ -1,5 +1,6 @@
 package testeconsultas.manytomany.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import testeconsultas.manytomany.dto.ResidencialLazerDTO;
 import testeconsultas.manytomany.entity.Lazer;
 import testeconsultas.manytomany.entity.Residencial;
 import testeconsultas.manytomany.exception.service.ControllerNotFoundException;
+import testeconsultas.manytomany.exception.service.DatabaseException;
 import testeconsultas.manytomany.repository.ILazerRepository;
 import testeconsultas.manytomany.repository.IResidencialRepository;
 
@@ -53,51 +55,29 @@ public class ResidencialService {
                 .collect(Collectors.toList());
     }
 
-    ////
-
-//    @Transactional(readOnly = true)
-//    public List<Object[]> findByIdResidencialLazer() {
-//        return residencialRepository.findByIdResidencialLazer();
-//    }
-
-//    @Transactional(readOnly = true)
-//    public ResidencialDTO findById(Long id) {
-//        var residencial = residencialRepository.findById(id)
-//                .orElseThrow(() -> new ControllerNotFoundException("Produto não encontrado"));
-//        return new ResidencialDTO(residencial, residencial.getLazeres());
-//    }
-
 //    @Transactional(readOnly = true)
 //    public Residencial findById(Long id) {
 //        Optional<Residencial> residencialOpt = residencialRepository.findByIdWithLazeres(id);
-//        return residencialOpt.orElseThrow(() -> new RuntimeException("Residencial não encontrado com o ID: " + id));
+//        if (residencialOpt.isPresent()) {
+//            return residencialOpt.get();
+//        } else {
+//            throw new RuntimeException("Residencial não encontrado com o ID: " + id);
+//        }
 //    }
 
-    @Transactional(readOnly = true)
-    public Residencial findById(Long id) {
-        Optional<Residencial> residencialOpt = residencialRepository.findByIdWithLazeres(id);
-        if (residencialOpt.isPresent()) {
-            return residencialOpt.get();
-        } else {
-            throw new RuntimeException("Residencial não encontrado com o ID: " + id);
+    @Transactional
+    public ResidencialDTO updateResidencial(Long id, ResidencialDTO residencialDTO){
+        try {
+            Residencial residencialEntity = residencialRepository.getReferenceById(id);
+            mapperDTOtoEntity(residencialDTO, residencialEntity);
+            residencialEntity = residencialRepository.save(residencialEntity);
+
+            return new ResidencialDTO(residencialEntity, residencialEntity.getLazeres());
+
+        } catch (EntityNotFoundException e){
+            throw new DatabaseException("Residencial não encontrado com o ID: " + id);
         }
     }
-
-    // TESTE CONSULTA RESINDECIAL COM LAZER - OK!!!!!!!!!!1
-//    @Transactional(readOnly = true)
-//    public ResidencialDTO findResidencialWithLazerById(Long id) {
-//        Optional<Residencial> residencialOpt = residencialRepository.findById(id);
-//        if (!residencialOpt.isPresent()) {
-//            return null;
-//        }
-//
-//        Residencial residencial = residencialOpt.get();
-//        List<LazerDTO> lazerDTOs = residencial.getLazeres().stream()
-//                .map(lazer -> new LazerDTO(lazer.getId(), lazer.getTipo()))
-//                .collect(Collectors.toList());
-//
-//        return new ResidencialDTO(residencial.getId(), residencial.getNome(), lazerDTOs);
-//    }
 
     @Transactional
     public ResidencialDTO saveResidencial(ResidencialDTO residencialDTO){
@@ -110,6 +90,7 @@ public class ResidencialService {
 
     private void mapperDTOtoEntity(ResidencialDTO dto, Residencial entity){
         entity.setNome(dto.getNome());
+        entity.getLazeres().clear();
 
         for(LazerDTO lazerDTO: dto.getLazeres()){
             Lazer lazer = lazerRepository.getOne(lazerDTO.getId());

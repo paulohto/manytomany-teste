@@ -28,6 +28,4 @@ public interface IResidencialRepository extends JpaRepository<Residencial, Long>
     @Query("SELECT r FROM Residencial r LEFT JOIN FETCH r.lazeres WHERE r.id = :id")
     Optional<Residencial> findByIdWithLazeres(@Param("id") Long id);
 
-//    @Query("SELECT r FROM Residencial r LEFT JOIN FETCH r.lazeres WHERE r.id = :id")
-//    Optional<Residencial> findByIdWithLazeres(Long id);
 }

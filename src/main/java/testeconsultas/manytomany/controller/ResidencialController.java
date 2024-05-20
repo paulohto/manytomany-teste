@@ -49,17 +49,6 @@ public class ResidencialController {
         return residencialService.findLazerByResidencialId(id);
     }
 
-//    @GetMapping("/lazeres/{id}")
-//    public List<Object[]> findByIdResidencialLazer(@PathVariable Long id) {
-//        return residencialService.findByIdResidencialLazer();
-//    }
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<ResidencialDTO> findById(@PathVariable Long id) {
-//        var residencial = residencialService.findById(id);
-//        return ResponseEntity.ok(residencial);
-//    }
-
     @GetMapping("/teste-byid/{id}")
     public ResponseEntity<ResidencialDTO> getResidencialWithLazer(@PathVariable Long id) {
         ResidencialDTO residencialDTO = residencialLazerService.findResidencialWithLazerById(id);
@@ -69,23 +58,23 @@ public class ResidencialController {
         return ResponseEntity.ok(residencialDTO);
     }
 
-    @GetMapping("/{id}")
-    public Residencial getResidencial(@PathVariable Long id) {
-        return residencialService.findById(id);
-    }
-
-//    @GetMapping("/{id}")
-//    public Residencial getResidencialById(@PathVariable Long id) {
-//        return residencialService.findById(id);
-//    }
     @PostMapping
     public ResponseEntity<ResidencialDTO> saveResidencial(
             @Valid
             @RequestBody ResidencialDTO dto
     ){
-        ResidencialDTO residencialDTO =residencialService.saveResidencial(dto);
+        ResidencialDTO residencialDTO = residencialService.saveResidencial(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand((residencialDTO.getId())).toUri();
         return ResponseEntity.created(uri).body(residencialDTO);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResidencialDTO> updateResidencial(
+            @Valid @PathVariable Long id,
+            @RequestBody ResidencialDTO dto)
+    {
+        var residencialUpdated = residencialService.updateResidencial(id, dto);
+        return ResponseEntity.ok(residencialUpdated);
     }
 
 }
