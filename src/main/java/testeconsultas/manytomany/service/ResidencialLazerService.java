@@ -1,17 +1,21 @@
 package testeconsultas.manytomany.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import testeconsultas.manytomany.dto.LazerDTO;
 import testeconsultas.manytomany.dto.ResidencialDTO;
 import testeconsultas.manytomany.dto.ResidencialLazerDTO;
+import testeconsultas.manytomany.entity.Lazer;
 import testeconsultas.manytomany.entity.Residencial;
+import testeconsultas.manytomany.exception.service.DatabaseException;
 import testeconsultas.manytomany.repository.ILazerRepository;
 import testeconsultas.manytomany.repository.IResidencialRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 public class ResidencialDTO {
@@ -37,9 +38,15 @@ public class ResidencialDTO {
 
     }
 
+//    public ResidencialDTO(Residencial residencial, Set<Lazer> lazeres) {
+//        this(residencial);
+//        lazeres.forEach(lazer -> this.lazeres.add(new LazerDTO(lazer)));
+//    }
+
     public ResidencialDTO(Residencial residencial, Set<Lazer> lazeres) {
-        this(residencial);
-        lazeres.forEach(lazer -> this.lazeres.add(new LazerDTO(lazer)));
+        this.id = residencial.getId();
+        this.nome = residencial.getNome();
+        this.lazeres = lazeres.stream().map(LazerDTO::new).collect(Collectors.toList());
     }
 
     public List<LazerDTO> getLazeres() {

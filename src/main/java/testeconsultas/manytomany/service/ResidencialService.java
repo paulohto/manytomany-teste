@@ -65,17 +65,43 @@ public class ResidencialService {
 //        }
 //    }
 
+//    @Transactional
+//    public ResidencialDTO updateResidencial(Long id, ResidencialDTO residencialDTO){
+//        try {
+//            Residencial residencialEntity = residencialRepository.getReferenceById(id);
+//            mapperDTOtoEntity(residencialDTO, residencialEntity);
+//            residencialEntity = residencialRepository.save(residencialEntity);
+//
+//            return new ResidencialDTO(residencialEntity, residencialEntity.getLazeres());
+//
+//        } catch (EntityNotFoundException e){
+//            throw new DatabaseException("Residencial não encontrado com o ID: " + id);
+//        }
+//    }
+
     @Transactional
     public ResidencialDTO updateResidencial(Long id, ResidencialDTO residencialDTO){
         try {
-            Residencial residencialEntity = residencialRepository.getReferenceById(id);
-            mapperDTOtoEntity(residencialDTO, residencialEntity);
+            Residencial residencialEntity = residencialRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Residencial not found with ID: " + id));
+
+            // Remove all existing relationships
+            residencialRepository.deleteAllLazerRelations(id);
+            residencialEntity.getLazeres().clear();
+
+            // Add new relationships
+            for (LazerDTO lazerDTO : residencialDTO.getLazeres()) {
+                Lazer lazer = lazerRepository.findById(lazerDTO.getId())
+                        .orElseThrow(() -> new EntityNotFoundException("Lazer not found with ID: " + lazerDTO.getId()));
+                residencialEntity.getLazeres().add(lazer);
+            }
+
+            residencialEntity.setNome(residencialDTO.getNome());
             residencialEntity = residencialRepository.save(residencialEntity);
 
             return new ResidencialDTO(residencialEntity, residencialEntity.getLazeres());
-
-        } catch (EntityNotFoundException e){
-            throw new DatabaseException("Residencial não encontrado com o ID: " + id);
+        } catch (EntityNotFoundException e) {
+            throw new DatabaseException("Residencial or Lazer not found with given IDs");
         }
     }
 
@@ -90,7 +116,7 @@ public class ResidencialService {
 
     private void mapperDTOtoEntity(ResidencialDTO dto, Residencial entity){
         entity.setNome(dto.getNome());
-        entity.getLazeres().clear();
+        //entity.getLazeres().clear();
 
         for(LazerDTO lazerDTO: dto.getLazeres()){
             Lazer lazer = lazerRepository.getOne(lazerDTO.getId());

@@ -70,11 +70,10 @@ public class ResidencialController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<ResidencialDTO> updateResidencial(
-            @Valid @PathVariable Long id,
-            @RequestBody ResidencialDTO dto)
-    {
-        var residencialUpdated = residencialService.updateResidencial(id, dto);
-        return ResponseEntity.ok(residencialUpdated);
+            @PathVariable Long id,
+            @Valid @RequestBody ResidencialDTO residencialDTO) {
+        ResidencialDTO updatedResidencial = residencialService.updateResidencial(id, residencialDTO);
+        return ResponseEntity.ok(updatedResidencial);
     }
 
 }
