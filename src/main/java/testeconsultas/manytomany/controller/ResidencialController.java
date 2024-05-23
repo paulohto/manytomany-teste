@@ -76,4 +76,10 @@ public class ResidencialController {
         return ResponseEntity.ok(updatedResidencial);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteResidencial(@PathVariable Long id) {
+        residencialService.deleteResidencial(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

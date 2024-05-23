@@ -1,6 +1,8 @@
 package testeconsultas.manytomany.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -55,30 +57,6 @@ public class ResidencialService {
                 .collect(Collectors.toList());
     }
 
-//    @Transactional(readOnly = true)
-//    public Residencial findById(Long id) {
-//        Optional<Residencial> residencialOpt = residencialRepository.findByIdWithLazeres(id);
-//        if (residencialOpt.isPresent()) {
-//            return residencialOpt.get();
-//        } else {
-//            throw new RuntimeException("Residencial não encontrado com o ID: " + id);
-//        }
-//    }
-
-//    @Transactional
-//    public ResidencialDTO updateResidencial(Long id, ResidencialDTO residencialDTO){
-//        try {
-//            Residencial residencialEntity = residencialRepository.getReferenceById(id);
-//            mapperDTOtoEntity(residencialDTO, residencialEntity);
-//            residencialEntity = residencialRepository.save(residencialEntity);
-//
-//            return new ResidencialDTO(residencialEntity, residencialEntity.getLazeres());
-//
-//        } catch (EntityNotFoundException e){
-//            throw new DatabaseException("Residencial não encontrado com o ID: " + id);
-//        }
-//    }
-
     @Transactional
     public ResidencialDTO updateResidencial(Long id, ResidencialDTO residencialDTO){
         try {
@@ -112,6 +90,23 @@ public class ResidencialService {
         var residencialSaved = residencialRepository.save(entity);
 
         return new ResidencialDTO(residencialSaved, residencialSaved.getLazeres());
+    }
+
+    @Transactional
+    public void deleteResidencial(Long id) {
+        try {
+            // Verifique se o Residencial existe
+            Residencial residencial = residencialRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Residencial not found with ID: " + id));
+
+            // Deleta todos os relacionamentos com lazeres
+            residencialRepository.deleteAllLazerRelations(id);
+
+            // Deleta o Residencial
+            residencialRepository.deleteResidencialById(id);
+        } catch (EntityNotFoundException e) {
+            throw new DatabaseException("Residencial not found with ID: " + id);
+        }
     }
 
     private void mapperDTOtoEntity(ResidencialDTO dto, Residencial entity){

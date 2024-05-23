@@ -32,4 +32,9 @@ public interface IResidencialRepository extends JpaRepository<Residencial, Long>
     @Query(value = "DELETE FROM tb_residencial_lazer WHERE residencial_id = :residencialId", nativeQuery = true)
     void deleteAllLazerRelations(@Param("residencialId") Long residencialId);
 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Residencial r WHERE r.id = :residencialId")
+    void deleteResidencialById(@Param("residencialId") Long residencialId);
+
 }
